@@ -16,6 +16,7 @@ FIRMWARE_FILE="Marlin.hex"
 BASE_PATH=$PWD
 TMP_PATH=$BASE_PATH"/tmp"
 BUILD_PATH=$TMP_PATH"/build"
+BUILDFAILED_PATH=$TMP_PATH"/failed"
 SOURCES_PATH=$BUILD_PATH"/sources"
 EXPORT_PATH=$BASE_PATH"/Firmwares"
 MARLIN_TEMPLATE_PATH=$TMP_PATH"/MarlinTemplate"
@@ -29,6 +30,7 @@ createDirs()
 	echo "BasePath:" $BASE_PATH
 	mkdir -p "$BUILD_PATH"
 	mkdir -p "$TMP_PATH"
+	mkdir -p "$BUILDFAILED_PATH"
 }
 
 
@@ -157,7 +159,7 @@ prepareFirmwares()
 				done
 				if [ $shit_happened_this_time -ne 0 ];then
 					echo "Ha fallado la aplicacion de los patches, se elimina de la lista de compilacion"
-					rm -rf $F_PATH
+					mv $F_PATH $BUILDFAILED_PATH/
 				fi
 			fi
 			done
@@ -233,4 +235,8 @@ case $1 in
 		compileAllFirmwares;;
 	*)
 		echo "Nada que hacer."
+		echo "Comandos:"
+		echo "setup    - instala las dependencias necesarias"
+		echo "cleanAll - limpia el espacio de trabajo"
+		echo "all      - Compila todos los firmwares"
 esac
